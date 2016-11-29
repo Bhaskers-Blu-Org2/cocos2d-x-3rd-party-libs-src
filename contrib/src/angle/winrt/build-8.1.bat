@@ -1,8 +1,9 @@
 @echo off
 setlocal
 
-set VERSION=2.1.9
-set URL=http://api.nuget.org/packages/angle.windowsstore.%VERSION%.nupkg
+set VERSION=2.1.10
+set URL=https://api.nuget.org/packages/angle.windowsstore.win81.%VERSION%.nupkg
+
 set STARTDIR=%cd%
 set LOGFILE=%~dp0\build.log
 
@@ -42,7 +43,7 @@ pushd ..\..\..\tarballs
 		)
 		
 		
-		call :DO_LOG "Downloading angle.windowsstore.%VERSION%.nupkg..."
+		call :DO_LOG "Downloading angle.windowsstore.win81.%VERSION%.nupkg..."
 		curl -O -L %URL%
 	)	
 popd
@@ -52,8 +53,8 @@ popd
 :: ---------------------------------------------------------------------------
 
 pushd temp
-	call:DO_LOG "Decompressing angle.windowsstore.%VERSION%.nupkg..."
-	unzip ../../../../tarballs/angle.windowsstore.%VERSION%.nupkg -d angle
+	call:DO_LOG "Decompressing angle.windowsstore.win81.%VERSION%.nupkg..."
+	unzip ../../../../tarballs/angle.windowsstore.win81.%VERSION%.nupkg -d angle
 popd
 
 :: ---------------------------------------------------------------------------
