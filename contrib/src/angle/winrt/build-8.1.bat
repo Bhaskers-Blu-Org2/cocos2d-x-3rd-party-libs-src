@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-set VERSION=2.1.11
+set VERSION=2.1.9
 set URL=http://api.nuget.org/packages/angle.windowsstore.%VERSION%.nupkg
 set STARTDIR=%cd%
 set LOGFILE=%~dp0\build.log
@@ -18,20 +18,23 @@ if exist temp (
 	rm -rf temp
 )
 
-if exist install (
-	rm -rf install
+if exist install\winrt_8.1-specific (
+	rm -rf install\winrt_8.1-specific
+)
+
+if exist install\wp_8.1-specific (
+	rm -rf install\wp_8.1-specific
 )
 
 mkdir temp
-mkdir install
 
 :: ---------------------------------------------------------------------------
 :: Download code if necessary
 :: ---------------------------------------------------------------------------
 
 pushd ..\..\..\tarballs
-	sha512sum --check ..\src\angle\winrt\SHA512SUMS-win10
-	
+	sha512sum --check ..\src\angle\winrt\SHA512SUMS-win8.1
+
 	if %ERRORLEVEL% NEQ 0 (
 
 		if exist angle.windowsstore.%VERSION%.nupkg (
@@ -61,12 +64,17 @@ call:DO_LOG "Installing ANGLE..."
 
 set INDIR=temp\angle\
 
-set OUTDIR=install\win10-specific\angle\include
+set OUTDIR=install\winrt_8.1-specific\angle\include
 xcopy "%INDIR%\Include" "%OUTDIR%" /iycqs
-set OUTDIR=install\win10-specific\angle\prebuilt
-xcopy "%INDIR%\bin\UAP\Win32" "%OUTDIR%\win32" /iycqs
-xcopy "%INDIR%\bin\UAP\ARM" "%OUTDIR%\arm" /iycqs
-xcopy "%INDIR%\bin\UAP\x64" "%OUTDIR%\x64" /iycqs
+set OUTDIR=install\winrt_8.1-specific\angle\prebuilt
+xcopy "%INDIR%\bin\Windows\Win32" "%OUTDIR%\win32" /iycqs
+xcopy "%INDIR%\bin\Windows\ARM" "%OUTDIR%\arm" /iycqs
+
+set OUTDIR=install\wp_8.1-specific\angle\include
+xcopy "%INDIR%\Include" "%OUTDIR%" /iycqs
+set OUTDIR=install\wp_8.1-specific\angle\prebuilt
+xcopy "%INDIR%\bin\Phone\Win32" "%OUTDIR%\win32" /iycqs
+xcopy "%INDIR%\bin\Phone\ARM" "%OUTDIR%\arm" /iycqs
 
 call:DO_LOG "ANGLE build complete."
 
@@ -76,9 +84,7 @@ call:DO_LOG "ANGLE build complete."
 ::--------------------------------------------------------
 :error_exit
 endlocal
-
 exit \b %ERRORLEVEL%
-
 goto:eof
 
 ::--------------------------------------------------------
